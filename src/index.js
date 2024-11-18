@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import emailjs from '@emailjs/browser';
+
+emailjs.init('wciuI5vtvYyfew6j9'); // Replace with your public key
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

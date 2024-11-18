@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import MovieSearch from "./pages/MovieSearch";
+import "./App.css";
+import emailjs from '@emailjs/browser';
 
-function App() {
+emailjs.init('wciuI5vtvYyfew6j9'); // Replace with your public key
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/search" element={<MovieSearch />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
