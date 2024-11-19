@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./MovieSearch.css";
 
 const MovieSearch = () => {
@@ -6,6 +7,8 @@ const MovieSearch = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortOption, setSortOption] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const fetchMovies = async (title) => {
     setLoading(true);
@@ -16,6 +19,7 @@ const MovieSearch = () => {
         );
         const data = await response.json();
         setMovies(data.Search || []);
+        setCurrentPage(1); // Reset to first page
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
@@ -60,6 +64,16 @@ const MovieSearch = () => {
     setMovies(sortedMovies);
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMovies = movies.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(movies.length / itemsPerPage);
+
   return (
     <div className="movie-search">
       <input
@@ -88,21 +102,44 @@ const MovieSearch = () => {
           ))}
         </div>
       ) : (
-        <div className="movie-list">
-          {movies.map((movie) => (
-            <div key={movie.imdbID} className="movie-card">
-              <img
-                src={
-                  movie.Poster !== "N/A"
-                    ? movie.Poster
-                    : "https://via.placeholder.com/150"
-                }
-                alt={movie.Title}
-              />
-              <h3>{movie.Title}</h3>
-              <p>{movie.Year}</p>
+        <div>
+          <div className="movie-list">
+            {currentMovies.map((movie) => (
+              <Link
+                key={movie.imdbID}
+                to={`/details/${movie.imdbID}`}
+                className="movie-card-link"
+              >
+                <div className="movie-card">
+                  {movie.Poster !== "N/A" ? (
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                    />
+                  ) : (
+                    <div className="no-image">No Image Available</div>
+                  )}
+                  <h3>{movie.Title}</h3>
+                  <p>{movie.Year}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  className={`pagination-button ${
+                    currentPage === index + 1 ? "active" : ""
+                  }`}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>

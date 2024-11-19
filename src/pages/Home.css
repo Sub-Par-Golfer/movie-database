@@ -73,6 +73,8 @@ body {
   align-items: center;
   text-align: center;
   padding: 40px;
+  background: rgba(200, 200, 200, 0.5);
+  border-radius: 4px;
 }
 
 .header__description {
